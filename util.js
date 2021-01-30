@@ -25,9 +25,10 @@ window.requestAnimFrame = (function () {
         };
 })();
 
-// add global parameters here
+var PARAMS = {
+    BB_LINE_WIDTH: 5,
+    DEBUG: false
 
-var params = {
-    HEIGHT: 32,
-    WIDTH: 23
 };
+
+// add global parameters here

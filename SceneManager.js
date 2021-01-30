@@ -4,6 +4,9 @@ class SceneManager {
         this.game = game;
         this.game.camera = this;
         this.x = 0;
-        game.addEntity(new egg1(game, 100, 100));
+
+        for (var i = 4; i > 0; i--) {
+            game.addEntity(new egg1(game, randomInt(1000), randomInt(700)));
+        }
     };
 }

@@ -7,8 +7,8 @@ class GameEngine {
         this.showOutlines = false;
         this.surfaceWidth = null;
         this.surfaceHeight = null;
-        this.right = false;
-        this.left = false;
+        this.pause = false;
+        this.pressed = false;
     };
 
     init(ctx) {
@@ -17,6 +17,11 @@ class GameEngine {
         this.surfaceHeight = this.ctx.canvas.height;
         this.startInput();
         this.timer = new Timer();
+        this.debugBox = document.getElementById("debug");
+        PARAMS.DEBUG = this.debugBox.checked;
+        this.debugBox.addEventListener("change", function (e) {
+            PARAMS.DEBUG = e.target.checked;
+        }, false)
     };
 
     start() {
@@ -28,40 +33,18 @@ class GameEngine {
     };
 
     startInput() {
-        var that = this;
+        let that = this;
 
         this.ctx.canvas.addEventListener("keydown", function (e) {
-            switch (e.code) {
-                case "ArrowLeft":
-                    that.left = true;
-                    break;
-                case "ArrowRight":
-                    that.right = true;
-                    break;
-                case "ArrowDown":
-                    that.down = true;
-                    break;
-                case "ArrowUp":
-                    that.up = true;
-                    break;
-                default:
+            if (e.code === "Space" && !that.pressed) {
+                that.pause = !that.pause;
+                that.pressed = true;
             }
         }, false);
 
         this.ctx.canvas.addEventListener("keyup", function (e) {
-            switch (e.code) {
-                case "ArrowLeft":
-                    that.left = false;
-                    break;
-                case "ArrowRight":
-                    that.right = false;
-                    break;
-                case "ArrowDown":
-                    that.down = false;
-                    break;
-                case "ArrowUp":
-                    that.up = false;
-                    break;
+            if (e.code === "Space") {
+                that.pressed = false;
             }
         }, false);
     }
@@ -95,7 +78,11 @@ class GameEngine {
         }
     };
 
+
     loop() {
+        if (this.pause) {
+            return;
+        }
         this.clockTick = this.timer.tick();
         this.update();
         this.draw();
