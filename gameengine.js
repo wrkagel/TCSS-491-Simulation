@@ -2,66 +2,49 @@
 
 class GameEngine {
     constructor() {
-        this.ctx = null;
+        this.context = null;
         this.entities = [];
         this.showOutlines = false;
         this.surfaceWidth = null;
         this.surfaceHeight = null;
-        this.right = false;
-        this.left = false;
+        this.pause = false;
+        this.pressed = false;
     };
 
     init(ctx) {
-        this.ctx = ctx;
-        this.surfaceWidth = this.ctx.canvas.width;
-        this.surfaceHeight = this.ctx.canvas.height;
+        this.context = ctx;
+        this.surfaceWidth = this.context.canvas.width;
+        this.surfaceHeight = this.context.canvas.height;
         this.startInput();
         this.timer = new Timer();
+        this.debugBox = document.getElementById("debug");
+        PARAMS.DEBUG = this.debugBox.checked;
+        this.debugBox.addEventListener("change", function (e) {
+            PARAMS.DEBUG = e.target.checked;
+        }, false)
     };
 
     start() {
         var that = this;
         (function gameLoop() {
             that.loop();
-            requestAnimFrame(gameLoop, that.ctx.canvas);
+            requestAnimFrame(gameLoop, that.context.canvas);
         })();
     };
 
     startInput() {
-        var that = this;
+        let that = this;
 
-        this.ctx.canvas.addEventListener("keydown", function (e) {
-            switch (e.code) {
-                case "ArrowLeft":
-                    that.left = true;
-                    break;
-                case "ArrowRight":
-                    that.right = true;
-                    break;
-                case "ArrowDown":
-                    that.down = true;
-                    break;
-                case "ArrowUp":
-                    that.up = true;
-                    break;
-                default:
+        this.context.canvas.addEventListener("keydown", function (e) {
+            if (e.code === "Space" && !that.pressed) {
+                that.pause = !that.pause;
+                that.pressed = true;
             }
         }, false);
 
-        this.ctx.canvas.addEventListener("keyup", function (e) {
-            switch (e.code) {
-                case "ArrowLeft":
-                    that.left = false;
-                    break;
-                case "ArrowRight":
-                    that.right = false;
-                    break;
-                case "ArrowDown":
-                    that.down = false;
-                    break;
-                case "ArrowUp":
-                    that.up = false;
-                    break;
+        this.context.canvas.addEventListener("keyup", function (e) {
+            if (e.code === "Space") {
+                that.pressed = false;
             }
         }, false);
     }
@@ -71,9 +54,9 @@ class GameEngine {
     };
 
     draw() {
-        this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+        this.context.clearRect(0, 0, this.context.canvas.width, this.context.canvas.height);
         for (var i = 0; i < this.entities.length; i++) {
-            this.entities[i].draw(this.ctx);
+            this.entities[i].draw(this.context);
         }
     };
 
@@ -95,7 +78,11 @@ class GameEngine {
         }
     };
 
+
     loop() {
+        if (this.pause) {
+            return;
+        }
         this.clockTick = this.timer.tick();
         this.update();
         this.draw();
