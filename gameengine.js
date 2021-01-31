@@ -2,7 +2,7 @@
 
 class GameEngine {
     constructor() {
-        this.ctx = null;
+        this.context = null;
         this.entities = [];
         this.showOutlines = false;
         this.surfaceWidth = null;
@@ -12,9 +12,9 @@ class GameEngine {
     };
 
     init(ctx) {
-        this.ctx = ctx;
-        this.surfaceWidth = this.ctx.canvas.width;
-        this.surfaceHeight = this.ctx.canvas.height;
+        this.context = ctx;
+        this.surfaceWidth = this.context.canvas.width;
+        this.surfaceHeight = this.context.canvas.height;
         this.startInput();
         this.timer = new Timer();
         this.debugBox = document.getElementById("debug");
@@ -28,21 +28,21 @@ class GameEngine {
         var that = this;
         (function gameLoop() {
             that.loop();
-            requestAnimFrame(gameLoop, that.ctx.canvas);
+            requestAnimFrame(gameLoop, that.context.canvas);
         })();
     };
 
     startInput() {
         let that = this;
 
-        this.ctx.canvas.addEventListener("keydown", function (e) {
+        this.context.canvas.addEventListener("keydown", function (e) {
             if (e.code === "Space" && !that.pressed) {
                 that.pause = !that.pause;
                 that.pressed = true;
             }
         }, false);
 
-        this.ctx.canvas.addEventListener("keyup", function (e) {
+        this.context.canvas.addEventListener("keyup", function (e) {
             if (e.code === "Space") {
                 that.pressed = false;
             }
@@ -54,9 +54,9 @@ class GameEngine {
     };
 
     draw() {
-        this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+        this.context.clearRect(0, 0, this.context.canvas.width, this.context.canvas.height);
         for (var i = 0; i < this.entities.length; i++) {
-            this.entities[i].draw(this.ctx);
+            this.entities[i].draw(this.context);
         }
     };
 

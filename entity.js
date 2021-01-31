@@ -29,6 +29,7 @@ class Entity {
         this.scaleDim = { x: width * this.scale, y: height * this.scale };
     }
 
+
     /** Updates the bounding box to the current position of the entity. */
     updateBB() {
         this.lastWorldBB = this.worldBB;
@@ -92,15 +93,6 @@ class Agent extends Entity {
         this.loadAnimations();
     }
 
-    /** Updates this entity's facing direction. */
-    updateFacing() {
-        if (this.vel.x < 0) {
-            this.facing = 0;
-        } else if (this.vel.x > 0) {
-            this.facing = 1;
-        }
-    }
-
     /**
      * Moves this entity based on its x and y velocity, then does collision checking and
      * updates the facing direction.
@@ -112,7 +104,6 @@ class Agent extends Entity {
         this.updateBB();
         this.checkCollisions();
         this.worldBB = this.makeDefaultBoundingBox();
-        this.updateFacing();
         this.updateBB();
     }
 

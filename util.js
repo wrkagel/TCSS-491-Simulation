@@ -27,8 +27,8 @@ window.requestAnimFrame = (function () {
 
 var PARAMS = {
     BB_LINE_WIDTH: 5,
-    DEBUG: false
-
+    DEBUG: false,
+    TILE_WIDTH: 32
 };
 
 // add global parameters here
